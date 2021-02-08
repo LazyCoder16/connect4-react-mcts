@@ -14,11 +14,3 @@ export default function Navbar() {
     </nav>
   )
 }
-
-/*
-        <ul className="right hide-on-med-and-down">
-          <li><a hred="#">Home</a></li>
-          <li><a href="#">About</a></li>
-        </ul>
-
-*/
