@@ -11,8 +11,8 @@ export default function RulesAndAbout() {
       <p>
       Algorithm used for the AI: <a href="https://towardsdatascience.com/monte-carlo-tree-search-158a917a8baa">https://towardsdatascience.com/monte-carlo-tree-search-158a917a8baa</a><br/>
       Source code: <a href="https://github.com/LazyCoder16/connect4-react-mcts">https://github.com/LazyCoder16/connect4-react-mcts</a><br/>
-      Project by Abhishek Jain</p>
-      <p></p>
+      Project by Abhishek Jain
+      </p>
     </div>
   )
 }
