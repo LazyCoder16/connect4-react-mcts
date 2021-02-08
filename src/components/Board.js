@@ -30,16 +30,18 @@ function Board() {
   }
 
   const reset = () => {
-    let board = new Connect4Board(null, R);
-    setBoard(board);
     setDone(false);
     setInfo("");
     if(Math.random() > 0.5) {
+      let board = new Connect4Board(null, R);
+      setBoard(board);
       setAwaiting(() => true);
       setBoard(mcts(new Node(board), 200).board);
       setAwaiting(false);
     }
     else {
+      let board = new Connect4Board(null, Y);
+      setBoard(board);
       setAwaiting(false);
     }
   }
