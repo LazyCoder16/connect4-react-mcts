@@ -7,7 +7,7 @@ import RulesAndAbout from './components/RulesAndAbout';
 function App() {
   return (
     <div className="App">
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <Navbar />
         <div className="container">
           <Switch>

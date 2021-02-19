@@ -3,7 +3,7 @@
 ## Description
 
 This is a game of Connect 4 vs AI made in React js created by Abhishek Jain.  
-You can see the app running live at [https://connect4-mcts-react.web.app/](https://connect4-mcts-react.web.app/)  
+You can see the app running live at [http://lazycoder16.github.io/connect4-react-mcts/](http://lazycoder16.github.io/connect4-react-mcts/)  
 Here is a screenshot of the app:
 ![Alt text](assets/screenshot.png?raw=true "Title")
 
