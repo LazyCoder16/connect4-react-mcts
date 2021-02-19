@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import Box from './Box';
 import { Y, R } from '../mcts/constants.json';
 import Connect4Board from '../Connect4Board';
 import Node from '../mcts/Node';
 import mcts from '../mcts/mcts';
 
-function Board() {
-  const [board, setBoard] = useState(new Connect4Board());
-  const [info, setInfo] = useState("");
-  const [done, setDone] = useState(false);
-  const [awaiting, setAwaiting] = useState(false);
-  const colors = {'1': '#ff0', '-1': '#f00', '0': '#EEFBFB'};
+class Board extends Component {
+  state = {
+    board: new Connect4Board(),
+    info: "",
+    done: false,
+    awaiting: false
+  };
+  colors = {'1': '#ff0', '-1': '#f00', '0': null};
 
-  const renderBox = (i, j) => {
-    return <Box color={colors[board.board[i][j]]} 
-            onClick={() => handleClick(j)}/>;
+  renderBox = (i, j) => {
+    return <Box color={this.colors[this.state.board.board[i][j]]} 
+            onClick={() => this.handleClick(j)}/>;
   }
 
-  const renderRow = (i) => {
+  renderRow = (i) => {
     const l = [0, 1, 2, 3, 4, 5, 6];
     const row = l.map((j) => {
-      return <div key={`${i}${j}`}>{renderBox(i, j)}</div>;
+      return <div key={`${i}${j}`}>{this.renderBox(i, j)}</div>;
     });
     return (
       <div className="row">
@@ -29,63 +31,67 @@ function Board() {
     );
   }
 
-  const reset = () => {
-    setDone(false);
-    setInfo("");
+  reset = () => {
+    this.setState({done: false, info: ""});
     if(Math.random() > 0.5) {
       let board = new Connect4Board(null, R);
-      setBoard(board);
-      setAwaiting(() => true);
-      setBoard(mcts(new Node(board), 200).board);
-      setAwaiting(false);
+      this.setState({board: mcts(new Node(board), 500).board, awaiting: true});
+      window.setTimeout(() => this.setState({awaiting: false}), 1000);
     }
     else {
-      let board = new Connect4Board(null, Y);
-      setBoard(board);
-      setAwaiting(false);
+      this.setState({board: new Connect4Board(), awaiting: false});
     }
   }
 
-  const updateInfo = (board) => {
+  updateInfo = (board) => {
     let res = board.checkDone();
     if(res === 0) return false;
-    if(res === Y) setInfo(() => "This can't happen!");
-    else if(res === R) setInfo(() => "Better luck next time");
-    else setInfo(() => "It is a draw");
-    setDone(true);
+    let info;
+    if(res === Y) info = "This can't happen!";
+    else if(res === R) info = "Better luck next time";
+    else info = "It is a draw";
+    this.setState({info, done: true});
     return true;
   }
 
-  const handleClick = (j) => {
+  handleClick = (j) => {
+    let {done, awaiting, board} = this.state;
     if(done || awaiting || board.board[0][j] !== 0) return;
-    setAwaiting(() => true);
-    let new_board = board.doMove(j);
-    setBoard(new_board);
-    let res = updateInfo(new_board);
-    if(res) return;
 
-    new_board = mcts(new Node(new_board), 500).board;
-    setBoard(new_board);
-    res = updateInfo(new_board);
-    if(res) return;
+    board = board.doMove(j);
+    this.setState({board, awaiting: true});
 
-    setAwaiting(false);
+    window.setTimeout(() => {
+      let res = this.updateInfo(board);
+      if(res) return;
+      
+      board = mcts(new Node(board), 500).board;
+      this.setState({board});
+
+      window.setTimeout(() => {
+        res = this.updateInfo(board);
+        if(res) return;;
+        this.setState({awaiting: false});
+      }, 1000);
+    }, 1000);
   }
-
-  return (
-    <div style={{textAlign: 'center', marginTop: '50px'}}>
-      <div id="board">
-        {renderRow(0)}
-        {renderRow(1)}
-        {renderRow(2)}
-        {renderRow(3)}
-        {renderRow(4)}
-        {renderRow(5)}
+  
+  render() {
+    return (
+      <div style={{textAlign: 'center', marginTop: '50px'}}>
+        <div id="board">
+          {this.renderRow(0)}
+          {this.renderRow(1)}
+          {this.renderRow(2)}
+          {this.renderRow(3)}
+          {this.renderRow(4)}
+          {this.renderRow(5)}
+        </div>
+        <p id="info">{this.state.info}</p>
+        <button id="reset-btn" onClick={this.reset}>Reset</button>
       </div>
-      <p id="info">{info}</p>
-      <button id="reset-btn" onClick={reset}>Reset</button>
-    </div>
-  );
+    );
+  }
 }
 
 export default Board;

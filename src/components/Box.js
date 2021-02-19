@@ -1,10 +1,11 @@
 import React from 'react'
 
-export default function Box(props) {
-  const c = props.color;
+export default function Box({onClick, color}) {
   return (
-    <div className="box" onClick={props.onClick} style={{backgroundColor: c}}>
-      
+    <div className="box" onClick={onClick}>
+      { color !== null &&
+        <div className="coin" style={{backgroundColor: color}}></div>
+      }
     </div>
   )
 }
